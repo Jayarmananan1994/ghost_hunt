@@ -1,24 +1,20 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:ghost_hunt/characters/damagable.dart';
-import 'package:ghost_hunt/characters/fire_ball.dart';
 import 'package:ghost_hunt/characters/hunter.dart';
 import 'package:ghost_hunt/ghost_hunt_game.dart';
 
-enum FlyingEyeState {
+enum GoblinState {
   attack,
-  flight,
+  run,
   death,
   takehit,
 }
 
-class FlyingEye extends SpriteAnimationGroupComponent
+class Goblin extends SpriteAnimationGroupComponent
     with HasGameRef<GhostHuntGame>, CollisionCallbacks, Damagable {
-  static const double damageRate = 3;
-  double _life = 20;
-
-  FlyingEye() : super(size: Vector2.all(100.0));
-
+  static const double damageRate = 5;
+  double _life = 35;
   @override
   Future<void>? onLoad() async {
     add(CircleHitbox());
@@ -29,16 +25,16 @@ class FlyingEye extends SpriteAnimationGroupComponent
     );
 
     final attack = SpriteAnimation.fromFrameData(
-        await gameRef.images.load('flying_eye/attack.png'),
+        await gameRef.images.load('goblin/attack.png'),
         SpriteAnimationData.sequenced(
           textureSize: Vector2.all(150.0),
           amount: 3,
           stepTime: 0.1,
         ));
-    final flight = SpriteAnimation.fromFrameData(
-        await gameRef.images.load('flying_eye/flight.png'), data);
+    final run = SpriteAnimation.fromFrameData(
+        await gameRef.images.load('goblin/run.png'), data);
     final death = SpriteAnimation.fromFrameData(
-        await gameRef.images.load('flying_eye/death.png'),
+        await gameRef.images.load('goblin/death.png'),
         SpriteAnimationData.sequenced(
             textureSize: Vector2.all(150.0),
             amount: 3,
@@ -46,43 +42,18 @@ class FlyingEye extends SpriteAnimationGroupComponent
             loop: false));
     death.onComplete = () => removeFromParent();
     final takeHit = SpriteAnimation.fromFrameData(
-        await gameRef.images.load('flying_eye/take_hit.png'), data);
+        await gameRef.images.load('goblin/take_hit.png'), data);
 
     animations = {
-      FlyingEyeState.attack: attack,
-      FlyingEyeState.death: death,
-      FlyingEyeState.flight: flight,
-      FlyingEyeState.takehit: takeHit
+      GoblinState.attack: attack,
+      GoblinState.death: death,
+      GoblinState.run: run,
+      GoblinState.takehit: takeHit
     };
     position = Vector2(gameRef.size[0] - 50, gameRef.size[1] - 125);
-    current = FlyingEyeState.flight;
+    current = GoblinState.run;
     debugMode = true;
     flipHorizontallyAroundCenter();
-  }
-
-  fly() {
-    current = FlyingEyeState.flight;
-  }
-
-  death() {
-    current = FlyingEyeState.death;
-  }
-
-  takeHit() {
-    current = FlyingEyeState.takehit;
-  }
-
-  attack() {
-    current = FlyingEyeState.attack;
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
-    position.x -= gameRef.hunter.isRunning() ? 5 : 1;
-    if (position.x < -200) {
-      gameRef.remove(this);
-    }
   }
 
   @override
@@ -96,19 +67,19 @@ class FlyingEye extends SpriteAnimationGroupComponent
   }
 
   @override
-  void onCollisionEnd(PositionComponent other) {
-    if (current != FlyingEyeState.death) {
-      super.onCollisionEnd(other);
-      fly();
-    }
-  }
-
-  @override
   void damageBy(double damageValue) {
     _life -= damageValue;
     print("Damage by $damageValue AND LIFE IS $_life");
     if (_life <= 0) {
       death();
     }
+  }
+
+  void attack() {
+    current = GoblinState.attack;
+  }
+
+  void death() {
+    current = GoblinState.attack;
   }
 }

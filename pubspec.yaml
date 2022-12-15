@@ -70,6 +70,7 @@ flutter:
     - assets/images/goblin/
     - assets/images/hunter/
     - assets/images/button/
+    - assets/images/fireball/
     - assets/audio/
   #   - images/a_dot_ham.jpeg
 

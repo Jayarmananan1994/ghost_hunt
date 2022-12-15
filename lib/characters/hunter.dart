@@ -1,5 +1,9 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:ghost_hunt/characters/damagable.dart';
+import 'package:ghost_hunt/characters/fire_ball.dart';
 import 'package:ghost_hunt/ghost_hunt_game.dart';
+import 'package:ghost_hunt/util/sprite_util.dart';
 
 enum HunterState {
   death,
@@ -11,13 +15,17 @@ enum HunterState {
 }
 
 class Hunter extends SpriteAnimationGroupComponent
-    with HasGameRef<GhostHuntGame> {
+    with HasGameRef<GhostHuntGame>, Damagable {
+  double _life = 100;
   Hunter() : super(size: Vector2.all(100.0));
 
   @override
   Future<void>? onLoad() async {
-    // assets/images/hunter/hunter_normal_attack_0.png
-    // assets/images/hunter/hunter_normal_atttack_0.png
+    add(RectangleHitbox(
+      size: Vector2(20, 70),
+      anchor: Anchor.center,
+      position: size / 2,
+    ));
     final highAttackSprites = [for (var i = 1; i <= 19; i++) i]
         .map((i) => Sprite.load('hunter/high_attack_$i.png'));
     final highAttackAnimation =
@@ -43,7 +51,14 @@ class Hunter extends SpriteAnimationGroupComponent
     var normalAttackSprites = List.generate(16, (i) => i + 1)
         .map((i) => Sprite.load('hunter/normal_attack_$i.png'));
     final normalAttack =
-        await createAnimationForSprites(normalAttackSprites, true);
+        await createAnimationForSprites(normalAttackSprites, true)
+          ..onFrame = (index) {
+            if (index == 2 || index == 8 || index == 16) {
+              final fireball = FireBall();
+              fireball.position = Vector2(150, gameRef.size[1] - 80);
+              gameRef.add(fireball);
+            }
+          };
 
     animations = {
       HunterState.highattack: highAttackAnimation,
@@ -54,31 +69,45 @@ class Hunter extends SpriteAnimationGroupComponent
       HunterState.run: runAnimation,
     };
     current = HunterState.idle;
-  }
-
-  Future<SpriteAnimation> createAnimationForSprites(
-      Iterable<Future<Sprite>> sprites, bool loop) async {
-    return SpriteAnimation.spriteList(
-      await Future.wait(sprites),
-      stepTime: 0.1,
-      loop: loop,
-    );
+    debugMode = true;
   }
 
   void run() {
-    current = HunterState.run;
+    if (isAlive()) current = HunterState.run;
   }
 
   void idle() {
-    current = HunterState.idle;
-    print("reset player back to idle");
+    if (isAlive()) current = HunterState.idle;
   }
 
   void attack() {
-    current = HunterState.normalattack;
+    if (isAlive()) current = HunterState.normalattack;
   }
 
-  HunterState currentState() {
-    return current;
+  bool isRunning() {
+    return current == HunterState.run;
+  }
+
+  bool isAlive() {
+    return current != HunterState.death;
+  }
+
+  // @override
+  // void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+  //   super.onCollision(intersectionPoints, other);
+  //   if (other is EvilFireBall) {
+  //     _life -= other.damage();
+  //     if (_life <= 0) {
+  //       current = HunterState.death;
+  //     }
+  //   }
+  // }
+
+  @override
+  void damageBy(double damageValue) {
+    _life -= damageValue;
+    if (_life <= 0) {
+      current = HunterState.death;
+    }
   }
 }
