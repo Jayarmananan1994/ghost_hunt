@@ -14,6 +14,7 @@ class DeathBringer extends SpriteAnimationGroupComponent
   late final ShapeHitbox observantHitBox;
   late final ShapeHitbox vulnerableHitBox;
   late final SpriteAnimation attackAnimation;
+  late Function? onDeath;
   double _life = 100;
   DeathBringer() : super(size: Vector2.all(100.0));
 
@@ -52,7 +53,7 @@ class DeathBringer extends SpriteAnimationGroupComponent
     final deathSprites = [for (var i = 1; i <= 10; i++) i]
         .map((i) => Sprite.load('death_bringer/Bringer-of-Death_Death_$i.png'));
     final deathAnimation = await createAnimationForSprites(deathSprites, false);
-
+    deathAnimation.onComplete = () => removeFromParent();
     final idleSprites = [for (var i = 1; i <= 8; i++) i]
         .map((i) => Sprite.load('death_bringer/Bringer-of-Death_Idle_$i.png'));
     final idleAnimation = await createAnimationForSprites(idleSprites, true);
@@ -110,6 +111,7 @@ class DeathBringer extends SpriteAnimationGroupComponent
     _life -= damageValue;
     if (_life <= 0) {
       current = DeathBringerState.death;
+      onDeath!();
     }
   }
 }

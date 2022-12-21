@@ -1,7 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:ghost_hunt/characters/damagable.dart';
-import 'package:ghost_hunt/characters/death_ghost.dart';
 import 'package:ghost_hunt/ghost_hunt_game.dart';
 
 enum FireBallState { fly, hit }
@@ -60,9 +59,22 @@ class FireBall extends SpriteAnimationGroupComponent
     }
   }
 
+  // @override
+  // void onCollisionEnd(other) {
+  //   if (other is Damagable) {
+  //     print(other.runtimeType);
+  //     hit();
+  //     Damagable damagable = other as Damagable;
+  //     damagable.damageBy(damageValue);
+  //   }
+  //   super.onCollisionEnd(other);
+  // }
+
   @override
-  void onCollisionStart(intersectionPoints, other) {
+  void onCollisionStart(
+      Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is Damagable) {
+      print(other.runtimeType);
       hit();
       Damagable damagable = other as Damagable;
       damagable.damageBy(damageValue);

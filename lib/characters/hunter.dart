@@ -39,7 +39,7 @@ class Hunter extends SpriteAnimationGroupComponent
     final deathSprites = [for (var i = 1; i <= 10; i++) i]
         .map((i) => Sprite.load('hunter/death_$i.png'));
     final deathAnimation = await createAnimationForSprites(deathSprites, false);
-
+    deathAnimation.onComplete = () => gameRef.gameOver();
     var idleSprite = [for (var i = 1; i <= 2; i++) i]
         .map((i) => Sprite.load('hunter/idle_$i.png'));
     final idleAnimation = await createAnimationForSprites(idleSprite, false);
@@ -92,6 +92,10 @@ class Hunter extends SpriteAnimationGroupComponent
     return current != HunterState.death;
   }
 
+  double life() {
+    return _life;
+  }
+
   // @override
   // void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
   //   super.onCollision(intersectionPoints, other);
@@ -106,6 +110,8 @@ class Hunter extends SpriteAnimationGroupComponent
   @override
   void damageBy(double damageValue) {
     _life -= damageValue;
+    gameRef.hunterLife.text = 'LIFE - ${life()}';
+    print("Life: $_life");
     if (_life <= 0) {
       current = HunterState.death;
     }

@@ -1,7 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:ghost_hunt/characters/damagable.dart';
-import 'package:ghost_hunt/characters/fire_ball.dart';
 import 'package:ghost_hunt/characters/hunter.dart';
 import 'package:ghost_hunt/ghost_hunt_game.dart';
 
@@ -14,14 +13,14 @@ enum FlyingEyeState {
 
 class FlyingEye extends SpriteAnimationGroupComponent
     with HasGameRef<GhostHuntGame>, CollisionCallbacks, Damagable {
-  static const double damageRate = 3;
+  static const double damageRate = 30;
   double _life = 20;
 
   FlyingEye() : super(size: Vector2.all(100.0));
 
   @override
   Future<void>? onLoad() async {
-    add(CircleHitbox());
+    add(CircleHitbox(radius: 30, position: size / 2, anchor: Anchor.center));
     final data = SpriteAnimationData.sequenced(
       textureSize: Vector2.all(150.0),
       amount: 2,
@@ -106,9 +105,11 @@ class FlyingEye extends SpriteAnimationGroupComponent
   @override
   void damageBy(double damageValue) {
     _life -= damageValue;
-    print("Damage by $damageValue AND LIFE IS $_life");
     if (_life <= 0) {
       death();
+    } else {
+      print("Take hit");
+      current = FlyingEyeState.takehit;
     }
   }
 }

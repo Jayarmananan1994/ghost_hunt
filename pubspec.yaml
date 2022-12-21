@@ -66,6 +66,7 @@ flutter:
     - assets/images/
     - assets/images/background/
     - assets/images/death_bringer/
+    - assets/images/skeleton/
     - assets/images/flying_eye/
     - assets/images/goblin/
     - assets/images/hunter/
@@ -85,10 +86,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: Valorax
+      fonts:
+        - asset: fonts/Valorax-lg25V.otf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -15,6 +15,8 @@ class Goblin extends SpriteAnimationGroupComponent
     with HasGameRef<GhostHuntGame>, CollisionCallbacks, Damagable {
   static const double damageRate = 5;
   double _life = 35;
+
+  Goblin() : super(size: Vector2.all(200));
   @override
   Future<void>? onLoad() async {
     add(CircleHitbox());
@@ -51,7 +53,7 @@ class Goblin extends SpriteAnimationGroupComponent
       GoblinState.takehit: takeHit
     };
     position = Vector2(gameRef.size[0] - 50, gameRef.size[1] - 125);
-    current = GoblinState.run;
+    current = GoblinState.takehit;
     debugMode = true;
     flipHorizontallyAroundCenter();
   }
@@ -67,9 +69,17 @@ class Goblin extends SpriteAnimationGroupComponent
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+    position.x -= gameRef.hunter.isRunning() ? 5 : 1;
+    if (position.x < -200) {
+      gameRef.remove(this);
+    }
+  }
+
+  @override
   void damageBy(double damageValue) {
     _life -= damageValue;
-    print("Damage by $damageValue AND LIFE IS $_life");
     if (_life <= 0) {
       death();
     }
