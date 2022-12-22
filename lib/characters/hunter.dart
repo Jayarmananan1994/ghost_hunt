@@ -14,7 +14,7 @@ enum HunterState {
   normalattack,
 }
 
-class Hunter extends SpriteAnimationGroupComponent
+class Hunter extends SpriteAnimationGroupComponent<HunterState>
     with HasGameRef<GhostHuntGame>, Damagable {
   double _life = 100;
   Hunter() : super(size: Vector2.all(100.0));
@@ -69,7 +69,6 @@ class Hunter extends SpriteAnimationGroupComponent
       HunterState.run: runAnimation,
     };
     current = HunterState.idle;
-    debugMode = true;
   }
 
   void run() {
@@ -111,7 +110,6 @@ class Hunter extends SpriteAnimationGroupComponent
   void damageBy(double damageValue) {
     _life -= damageValue;
     gameRef.hunterLife.text = 'LIFE - ${life()}';
-    print("Life: $_life");
     if (_life <= 0) {
       current = HunterState.death;
     }

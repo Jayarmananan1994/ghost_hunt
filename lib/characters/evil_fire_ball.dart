@@ -33,7 +33,6 @@ class EvilFireBall extends SpriteAnimationGroupComponent
 
     current = EvilFireBallState.fly;
     flipHorizontallyAroundCenter();
-    debugMode = true;
   }
 
   @override

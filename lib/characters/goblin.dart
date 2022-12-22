@@ -54,7 +54,6 @@ class Goblin extends SpriteAnimationGroupComponent
     };
     position = Vector2(gameRef.size[0] - 50, gameRef.size[1] - 125);
     current = GoblinState.takehit;
-    debugMode = true;
     flipHorizontallyAroundCenter();
   }
 

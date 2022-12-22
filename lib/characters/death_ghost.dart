@@ -69,7 +69,6 @@ class DeathBringer extends SpriteAnimationGroupComponent
       DeathBringerState.idle: idleAnimation,
     };
     current = DeathBringerState.idle;
-    debugMode = true;
   }
 
   @override

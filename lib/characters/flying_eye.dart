@@ -13,7 +13,7 @@ enum FlyingEyeState {
 
 class FlyingEye extends SpriteAnimationGroupComponent
     with HasGameRef<GhostHuntGame>, CollisionCallbacks, Damagable {
-  static const double damageRate = 30;
+  static const double damageRate = 3;
   double _life = 20;
 
   FlyingEye() : super(size: Vector2.all(100.0));
@@ -55,7 +55,6 @@ class FlyingEye extends SpriteAnimationGroupComponent
     };
     position = Vector2(gameRef.size[0] - 50, gameRef.size[1] - 125);
     current = FlyingEyeState.flight;
-    debugMode = true;
     flipHorizontallyAroundCenter();
   }
 
@@ -108,7 +107,6 @@ class FlyingEye extends SpriteAnimationGroupComponent
     if (_life <= 0) {
       death();
     } else {
-      print("Take hit");
       current = FlyingEyeState.takehit;
     }
   }

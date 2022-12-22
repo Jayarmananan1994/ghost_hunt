@@ -41,9 +41,4 @@ class ControllButton extends SpriteGroupComponent<ButtonState>
     pressUp();
     return super.onTapUp(info);
   }
-
-  // @override
-  // bool onTapCancel() {
-  //   return super.onTapCancel();
-  // }
 }

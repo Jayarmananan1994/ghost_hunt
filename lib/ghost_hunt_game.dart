@@ -77,7 +77,6 @@ class GhostHuntGame extends FlameGame with HasTappables, HasCollisionDetection {
   }
 
   runPlayer() {
-    print("${enemySpawnTimer?.isActive}");
     if (hunter.current == HunterState.idle) {
       ghostHuntParallax.parallax?.baseVelocity = Vector2(50, 0);
       hunter.run();
@@ -90,8 +89,6 @@ class GhostHuntGame extends FlameGame with HasTappables, HasCollisionDetection {
   }
 
   void iniitateAttack() {
-    print("INITIALETE ATTACK FROM LEVEL $level");
-
     enemySpawnTimer = async.Timer.periodic(const Duration(seconds: 8), (timer) {
       if (level == 1) {
         flyeEyeCount++;

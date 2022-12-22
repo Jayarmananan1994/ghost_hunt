@@ -59,7 +59,6 @@ class Skeleton extends SpriteAnimationGroupComponent
     };
     position = Vector2(gameRef.size[0] - 75, gameRef.size[1] - 135);
     current = SkeletonState.walk;
-    debugMode = true;
     flipHorizontallyAroundCenter();
   }
 
